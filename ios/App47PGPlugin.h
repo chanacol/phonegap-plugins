@@ -5,10 +5,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <PhoneGap/PGPlugin.h>
+//#import <PhoneGap/PGPlugin.h>
+#import <Cordova/CDVPlugin.h>
 
-@interface App47PGPlugin : PGPlugin
- 
+@interface App47PGPlugin : CDVPlugin
+
 - (void) sendGenericEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void) startTimedEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void) endTimedEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
@@ -16,3 +17,4 @@
 - (void) configurationValue:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 
 @end
+ 

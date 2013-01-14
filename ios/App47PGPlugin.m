@@ -6,16 +6,16 @@
 #import "App47PGPlugin.h"
 #import "EmbeddedAgent.h"
 
-#ifdef PHONEGAP_FRAMEWORK
-  #import <PhoneGap/PluginResult.h>
-#else
-  #import "PluginResult.h"
-#endif
+//#ifdef PHONEGAP_FRAMEWORK
+#import <Cordova/CDVPluginResult.h>
+//#else
+//#import "CDVPluginResult.h"
+//#endif
 
 @interface App47PGPlugin()
 
-+ (PluginResult*) getPlugInResult: (NSString*) stringToReturn;
-+ (PluginResult*) getPlugInErrorResult: (NSException*) exception;
++ (CDVPluginResult*) getPlugInResult: (NSString*) stringToReturn;
++ (CDVPluginResult*) getPlugInErrorResult: (NSException*) exception;
 
 @end
 
@@ -30,12 +30,12 @@
         NSString* key = [options objectForKey:@"key"];
         NSString* group = [options objectForKey:@"group"];
         id obj = [EmbeddedAgent configurationObjectForKey:key group:group];
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInResult:(NSString *)obj] 
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:(NSString *)obj] 
                                 toSuccessCallbackString:callbackID]];
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
                                 toErrorCallbackString:callbackID]];
     }   
 }
@@ -45,11 +45,11 @@
     NSString* callbackID = [arguments pop];
     @try 
     {
-            
+        
         NSString* logType = [options objectForKey:@"type"];
         if([logType isEqualToString:@"info"])
         {
-           EALogInfo(@"%@",[options objectForKey:@"msg"]); 
+            EALogInfo(@"%@",[options objectForKey:@"msg"]); 
         }
         else if([logType isEqualToString:@"warn"])
         {
@@ -63,13 +63,13 @@
         {
             EALogDebug(@"%@",[options objectForKey:@"msg"]); 
         }
-
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInResult:@"success"] 
+        
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:@"success"] 
                                 toSuccessCallbackString:callbackID]];
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
                                 toErrorCallbackString:callbackID]];
     }
 }
@@ -79,15 +79,15 @@
     NSString* callbackID = [arguments pop];
     @try 
     {
-      
-      NSString *eventName = [arguments objectAtIndex:0]; 
-      [EmbeddedAgent sendGenericEvent:eventName];
-      [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInResult:eventName] 
-                              toSuccessCallbackString:callbackID]];
+        
+        NSString *eventName = [arguments objectAtIndex:0]; 
+        [EmbeddedAgent sendGenericEvent:eventName];
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:eventName] 
+                                toSuccessCallbackString:callbackID]];
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
                                 toErrorCallbackString:callbackID]];
     }
 }
@@ -99,12 +99,12 @@
     {
         NSString *eventName = [arguments objectAtIndex:0]; 
         NSString *eventID = [EmbeddedAgent startTimedEvent:eventName];
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInResult:eventID] 
-                              toSuccessCallbackString:callbackID]]; 
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:eventID] 
+                                toSuccessCallbackString:callbackID]]; 
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
                                 toErrorCallbackString:callbackID]];   
     }
     
@@ -117,25 +117,25 @@
     {
         NSString *eventName = [arguments objectAtIndex:0]; 
         [EmbeddedAgent endTimedEvent:eventName];
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInResult:eventName] 
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:eventName] 
                                 toSuccessCallbackString:callbackID]]; 
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(PluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
-            toErrorCallbackString:callbackID]];    
+        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
+                                toErrorCallbackString:callbackID]];    
     }
 }
 
-+ (PluginResult*) getPlugInResult: (NSString*) stringToReturn 
++ (CDVPluginResult*) getPlugInResult: (NSString*) stringToReturn 
 {
-    return [PluginResult resultWithStatus:PGCommandStatus_OK messageAsString: 
+    return [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: 
             [stringToReturn stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 }
 
-+ (PluginResult*) getPlugInErrorResult: (NSException*) exception
++ (CDVPluginResult*) getPlugInErrorResult: (NSException*) exception
 {
-    return [PluginResult resultWithStatus:PGCommandStatus_ERROR messageAsString:[exception name]];
+    return [CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR messageAsString:[exception name]];
 }
 
 - (id)init
@@ -154,4 +154,4 @@
 }
 
 @end
-    
+
