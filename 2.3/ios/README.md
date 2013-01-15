@@ -2,7 +2,7 @@
 
 ## Installation
 
-You will first need to download and configure the [App47 SDK](http://www.app47.com) for iOS. Then copy the `App47PGPlugin.h` & `App47PGPlugin.m` files into the `Plugins` directory; furthermore, copy `app47pg.js` into the `www` directory. Reference it in a script tag *after* `phonegap.js`. In `PhoneGap.plist` (found in the `Supporting Files/` folder), under the `Plugins` key, add `"com.app47.sdk"` with the value `"App47PGPlugin"`.
+You will first need to download and configure the [App47 SDK](http://www.app47.com) for iOS. Then copy the `App47PGPlugin.h` & `App47PGPlugin.m` files into the `Plugins` directory; furthermore, copy `app47pg.js` into the `www` directory. Reference it in a script tag *after* `cordova-2.3.0.js`. In `config.xml` (found in the `Supporting Files/` folder), under the `Plugins` key, add `"App47"` with the value `"App47PGPlugin"`.
 
 
 # License
