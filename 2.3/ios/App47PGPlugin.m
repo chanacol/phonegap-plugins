@@ -12,33 +12,29 @@
 //#import "CDVPluginResult.h"
 //#endif
 
-@interface App47PGPlugin()
-
-+ (CDVPluginResult*) getPlugInResult: (NSString*) stringToReturn;
-+ (CDVPluginResult*) getPlugInErrorResult: (NSException*) exception;
-
-@end
 
 @implementation App47PGPlugin
 
 
-- (void) configurationValue:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+-(void)configurationValue:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackID = [arguments pop];
-    @try 
+    CDVPluginResult* pluginResult = nil;
+    NSDictionary* options = [command.arguments objectAtIndex:0];
+    @try
     {
         NSString* key = [options objectForKey:@"key"];
         NSString* group = [options objectForKey:@"group"];
         id obj = [EmbeddedAgent configurationObjectForKey:key group:group];
-        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:(NSString *)obj] 
-                                toSuccessCallbackString:callbackID]];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:obj];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
-                                toErrorCallbackString:callbackID]];
-    }   
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:[ex reason]];
+    }
 }
+
 - (void) log:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult* pluginResult = nil;
@@ -75,7 +71,7 @@
 -(void)sendGenericEvent:(CDVInvokedUrlCommand *)command  
 {
     CDVPluginResult* pluginResult = nil;
-    @try 
+    @try
     {
         
         NSString *eventName = [command.arguments objectAtIndex:0]; 
@@ -89,51 +85,39 @@
     }
 }
 
-- (void)startTimedEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+- (void)startTimedEvent:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackID = [arguments pop];    
-    @try 
+    CDVPluginResult* pluginResult = nil;
+    @try
     {
-        NSString *eventName = [arguments objectAtIndex:0]; 
+        NSString *eventName = [command.arguments objectAtIndex:0];
         NSString *eventID = [EmbeddedAgent startTimedEvent:eventName];
-        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:eventID] 
-                                toSuccessCallbackString:callbackID]]; 
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:eventID];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
-                                toErrorCallbackString:callbackID]];   
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:[ex reason]];
     }
     
 }
 
-- (void) endTimedEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+- (void)endTimedEvent:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackID = [arguments pop];
-    @try 
+    CDVPluginResult* pluginResult = nil;
+    @try
     {
-        NSString *eventName = [arguments objectAtIndex:0]; 
+        NSString *eventName = [command.arguments objectAtIndex:0];
         [EmbeddedAgent endTimedEvent:eventName];
-        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInResult:eventName] 
-                                toSuccessCallbackString:callbackID]]; 
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
     @catch (NSException *ex) 
     {
-        [self writeJavascript: [(CDVPluginResult *)[App47PGPlugin getPlugInErrorResult:ex] 
-                                toErrorCallbackString:callbackID]];    
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:[ex reason]];
     }
 }
 
-+ (CDVPluginResult*) getPlugInResult: (NSString*) stringToReturn 
-{
-    return [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: 
-            [stringToReturn stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-}
-
-+ (CDVPluginResult*) getPlugInErrorResult: (NSException*) exception
-{
-    return [CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR messageAsString:[exception name]];
-}
 
 - (id)init
 {

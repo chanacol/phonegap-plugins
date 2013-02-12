@@ -11,10 +11,10 @@
 @interface App47PGPlugin : CDVPlugin
 
 - (void) sendGenericEvent:(CDVInvokedUrlCommand *)command;
-- (void) startTimedEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) endTimedEvent:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) startTimedEvent:(CDVInvokedUrlCommand *)command;
+- (void) endTimedEvent:(CDVInvokedUrlCommand *)command;
 - (void) log:(CDVInvokedUrlCommand *)command;
-- (void) configurationValue:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) configurationValue:(CDVInvokedUrlCommand *)command;
 
 @end
  
