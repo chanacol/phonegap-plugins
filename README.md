@@ -2,6 +2,8 @@
 
 In order to use App47 with [PhoneGap](http://www.phonegap.com/), you will need to download and configure the [App47 SDK](http://www.app47.com) for your particular platform. Then, to make use of a particular PhoneGap plugin, follow the directions for your desired platform (i.e. for iOS, copy the `App47PGPlugin.h` & `App47PGPlugin.m` files into the `Plugins` directory, etc) found in the corresponding README.
 
+Note: you will need to be sure that App47 URLs are white listed. Please see the [iOS example](https://github.com/App47/phonegap-ios-example) or [Android example](https://github.com/App47/phonegap-android-example) apps for more details. 
+
 # License
 
 The MIT License
