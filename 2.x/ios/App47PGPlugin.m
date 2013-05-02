@@ -15,8 +15,93 @@
 
 @implementation App47PGPlugin
 
+- (void) configurationAsMap:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = nil;
+    NSDictionary* options = [command.arguments objectAtIndex:0];
+    @try
+    {
+        NSString* group = [options objectForKey:@"group"];
+        NSDictionary* dict = [EmbeddedAgent configurationGroupAsDictionary:group];
+        
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                           options:0
+                                                             error:&error];
+        
+        if (!jsonData) {
+            NSLog(@"Got an error trying to convert into JSON representation: %@", error);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:@"unable to convert result into JSON"];
+        } else {
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+        
+    }
+    @catch (NSException *ex)
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:[ex reason]];
+    }
+}
 
--(void)configurationValue:(CDVInvokedUrlCommand *)command
+- (void) configurationKeys:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = nil;
+    NSDictionary* options = [command.arguments objectAtIndex:0];
+    @try
+    {
+        NSString* group = [options objectForKey:@"group"];
+        NSArray* arry = [EmbeddedAgent allKeysForConfigurationGroup:group];
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arry
+                                                           options:0 
+                                                             error:&error];
+        
+        if (!jsonData) {
+            NSLog(@"Got an error trying to convert into JSON representation: %@", error);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:@"unable to convert result into JSON"];
+        } else {
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }        
+    }
+    @catch (NSException *ex)
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:[ex reason]];
+    }
+}
+
+- (void) configurationGroupNames:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = nil;
+    @try
+    {
+        NSArray* arry = [EmbeddedAgent configurationGroupNames];
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arry
+                                                           options:0
+                                                             error:&error];
+        
+        if (!jsonData) {
+            NSLog(@"Got an error trying to convert into JSON representation: %@", error);
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:@"unable to convert result into JSON"];
+        } else {
+            NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }                        
+    }
+    @catch (NSException *ex)
+    {
+        NSLog(@"NSException in configurationGroupNames ");
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR  messageAsString:[ex reason]];
+    }
+}
+
+
+-(void) configurationValue:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult* pluginResult = nil;
     NSDictionary* options = [command.arguments objectAtIndex:0];
