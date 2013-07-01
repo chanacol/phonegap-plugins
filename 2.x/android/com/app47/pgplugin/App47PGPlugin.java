@@ -31,6 +31,7 @@ public class App47PGPlugin extends CordovaPlugin {
 	private static final String CONFIGURATION_AS_MAP = "configurationAsMap";
 	private static final String CONFIGURATION_VALUE = "configurationValue";
 	private static final String START_TIMED_EVENT = "startTimedEvent";
+	private static final String CONFIGURE_AGENT = "configureAgent";
 
 	public boolean execute(String method, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		if (method.equals(START_TIMED_EVENT)) {
@@ -43,18 +44,30 @@ public class App47PGPlugin extends CordovaPlugin {
 			return true;
 		} else if (method.equals(CONFIGURATION_AS_MAP)) {
 			Map<String, String> value = handleConfigurationAsMap(args);
-			handleCallback(callbackContext, new JSONObject(value));
+			if (value != null) {
+				handleCallback(callbackContext, new JSONObject(value));
+			} else {
+				handleCallback(callbackContext, null);
+			}
 			return true;
 		} else if (method.equals(CONFIGURATION_KEYS)) {
-			Object value = handleConfigurationKeys(args);
-			handleCallback(callbackContext, value);
+			handleCallback(callbackContext, handleConfigurationKeys(args));
 			return true;
 		} else if (method.equals(CONFIGURATION_GROUP_NAMES)){ 
 			handleGroupNames(callbackContext);
 			return true;
+		}else if(method.equals(CONFIGURE_AGENT)){
+			handleConfigureAgent(args, callbackContext);
+			return true;
 		}else {
 			return handleActionWithCallback(method, args, callbackContext);
 		}
+	}
+
+	private void handleConfigureAgent(JSONArray args, CallbackContext callbackContext) throws JSONException {
+		EmbeddedAgent.configureAgentWithAppID(cordova.getActivity().getApplicationContext(), args.getString(0));
+		EmbeddedAgent.onResume(cordova.getActivity().getApplicationContext());
+		handleCallback(callbackContext, "success");
 	}
 
 	private void handleGroupNames(CallbackContext callbackContext) {

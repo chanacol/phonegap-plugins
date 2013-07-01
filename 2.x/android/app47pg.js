@@ -1,9 +1,13 @@
 /**
- * App47 Plugin for cordova Android, created by the team @ App47, Inc.
+ * App47 Plugin for the Cordova/PhoneGap Android platform, created by the team @ App47, Inc.
  * The plugin's JavaScript functions are under the global "window.plugins.App47" object. 
+ * 
+ * Consult our wiki (http://www.app47.com/wiki) for more information on our Agent APIs.
  * 
  * See https://github.com/App47/phonegap-android-example for Plugin usage in sample Android project 
  * and https://github.com/App47/phonegap-ios-example for Plugin usage in sample iOS project.
+ * 
+ * If you have any questions/comments please find us at http://app47.com or contact us support@app47.com
  */
 
 App47 = function() {
@@ -52,6 +56,10 @@ App47.prototype.getConfigurationKeys = function(grp, success, fail) {
 
 App47.prototype.getConfigurationGroupNames = function(success, fail) {
   return cordova.exec(success, fail, this.serviceName, "configurationGroupNames", []);
+};
+
+App47.prototype.configureAgent = function(appId, success, fail) {
+  return cordova.exec(success, fail, this.serviceName, "configureAgent", appId);
 };
 
 App47.install = function(){
