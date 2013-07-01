@@ -44,7 +44,11 @@ public class App47PGPlugin extends CordovaPlugin {
 			return true;
 		} else if (method.equals(CONFIGURATION_AS_MAP)) {
 			Map<String, String> value = handleConfigurationAsMap(args);
-			handleCallback(callbackContext, new JSONObject(value));
+			if (value != null) {
+				handleCallback(callbackContext, new JSONObject(value));
+			} else {
+				handleCallback(callbackContext, null);
+			}
 			return true;
 		} else if (method.equals(CONFIGURATION_KEYS)) {
 			handleCallback(callbackContext, handleConfigurationKeys(args));
